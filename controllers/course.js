@@ -33,7 +33,7 @@ export const uploadImage = async (req, res) => {
 
     // image params
     const params = {
-      Bucket: "xidastest-bucket",
+      Bucket: "granddevbucket",
       Key: `${nanoid()}.${type}`,
       Body: base64Data,
       ACL: "public-read",
@@ -124,7 +124,7 @@ export const uploadVideo = async (req, res) => {
 
     // video params
     const params = {
-      Bucket: "xidastest-bucket",
+      Bucket: "granddevbucket",
       Key: `${nanoid()}.${video.type.split("/")[1]}`,
       Body: readFileSync(video.path),
       ACL: "public-read",
@@ -369,13 +369,23 @@ export const paidEnrollment = async (req, res) => {
       payment_method_types: ["card"],
       // purchase details
       line_items: [
-        {
-          name: course.name,
-          amount: Math.round(course.price.toFixed(2) * 100),
-          currency: "usd",
-          quantity: 1,
+       {
+        price_data: {
+          currency: 'usd',
+          unit_amount:  Math.round(course.price.toFixed(2) * 100),
+          product_data: {
+            name: course.name,
+            
+          },
         },
-      ],
+        quantity: 1,
+       }
+        // {
+        //   name: course.name,
+        //   amount: Math.round(course.price.toFixed(2) * 100),
+        //   quantity: 1,
+        // },
+      ], mode: 'payment',
       // charge buyer and transfer remaining balance to seller (after fee)
       payment_intent_data: {
         application_fee_amount: Math.round(fee.toFixed(2) * 100),
